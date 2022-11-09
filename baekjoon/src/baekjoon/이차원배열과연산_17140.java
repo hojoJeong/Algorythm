@@ -3,7 +3,7 @@ package baekjoon;
 import java.util.*;
 import java.io.*;
 
-public class ÀÌÂ÷¿ø¹è¿­°ú¿¬»ê_17140 {
+public class ì´ì°¨ì›ë°°ì—´ê³¼ì—°ì‚°_17140 {
 
 	static int r, c, k, time, ans, R, C;
 	static int[][] arr;
@@ -47,8 +47,6 @@ public class ÀÌÂ÷¿ø¹è¿­°ú¿¬»ê_17140 {
 			}
 
 			time++;
-
-			checkRC();
 		}
 
 		System.out.println(ans);
@@ -63,7 +61,7 @@ public class ÀÌÂ÷¿ø¹è¿­°ú¿¬»ê_17140 {
 	}
 
 	static void checkRC() {
-		// Çà ¼ö Ã¼Å©
+		// í–‰ ìˆ˜ ì²´í¬
 		Loop1: for (int i = 0; i < 100; i++) {
 			int rTemp = 0;
 			for (int j = 0; j < 100; j++) {
@@ -79,7 +77,7 @@ public class ÀÌÂ÷¿ø¹è¿­°ú¿¬»ê_17140 {
 			}
 		}
 
-		// ¿­ ¼ö Ã¼Å©
+		// ì—´ ìˆ˜ ì²´í¬
 		Loop1: for (int i = 0; i < 100; i++) {
 			int cTemp = 0;
 			for (int j = 0; j < 100; j++) {
@@ -100,10 +98,10 @@ public class ÀÌÂ÷¿ø¹è¿­°ú¿¬»ê_17140 {
 		for (int i = 0; i < R; i++) {
 			list.clear();
 			for (int j = 0; j < C; j++) {
-				if (arr[i][j] != 0) { // list¿¡ ÀÔ·Â
-					if (!checkListDuplicate(arr[i][j])) {// list¿¡ arr[i][j]°¡ ¾øÀ¸¸é list¿¡ ³Ö¾îÁÜ
+				if (arr[i][j] != 0) { // listì— ì…ë ¥
+					if (!checkListDuplicate(arr[i][j])) {// listì— arr[i][j]ê°€ ì—†ìœ¼ë©´ listì— ë„£ì–´ì¤Œ
 						list.add(new Value(arr[i][j], 1));
-					} else { // list¿¡ ÀÌ¹Ì arr[i][j]°¡ ÀÖÀ¸¸é µîÀå È¸¼ö Áõ°¡
+					} else { // listì— ì´ë¯¸ arr[i][j]ê°€ ìˆìœ¼ë©´ ë“±ì¥ íšŒìˆ˜ ì¦ê°€
 						for (int t = 0; t < list.size(); t++) {
 							if (list.get(t).value == arr[i][j]) {
 								list.get(t).times++;
@@ -112,7 +110,7 @@ public class ÀÌÂ÷¿ø¹è¿­°ú¿¬»ê_17140 {
 					}
 				}
 			}
-			// ¼ö ¿À¸§Â÷¼øÀ¸·Î ¸ÕÀú Á¤·ÄÇÏ°í µîÀåÈ¸¼ö ¿À¸§Â÷¼øÀ¸·Î Á¤·Ä -> µîÀåÈ¸¼ö ¿À¸§Â÷¼øÀÌ 1¼øÀ§
+			// ìˆ˜ ì˜¤ë¦„ì°¨ìˆœìœ¼ë¡œ ë¨¼ì € ì •ë ¬í•˜ê³  ë“±ì¥íšŒìˆ˜ ì˜¤ë¦„ì°¨ìˆœìœ¼ë¡œ ì •ë ¬ -> ë“±ì¥íšŒìˆ˜ ì˜¤ë¦„ì°¨ìˆœì´ 1ìˆœìœ„
 			list.sort(new Comparator<Value>() {
 				
 				@Override
@@ -131,7 +129,7 @@ public class ÀÌÂ÷¿ø¹è¿­°ú¿¬»ê_17140 {
 			});
 
 
-			// ¹è¿­ °»½Å
+			// ë°°ì—´ ê°±ì‹ 
 			int idx = 0;
 			int size = list.size();
 			if(size > 100) size = 100;
@@ -139,7 +137,7 @@ public class ÀÌÂ÷¿ø¹è¿­°ú¿¬»ê_17140 {
 				arr[i][idx++] = list.get(k).value;
 				arr[i][idx++] = list.get(k).times;
 			}
-			for(int k=idx; k<100; k++) {	//µÚÂÊ ÀüºÎ 0À¸·Î ¸¸µé¾îÁÜ
+			for(int k=idx; k<100; k++) {	//ë’¤ìª½ ì „ë¶€ 0ìœ¼ë¡œ ë§Œë“¤ì–´ì¤Œ
 				arr[i][k] = 0;
 			}
 		}
@@ -149,10 +147,10 @@ public class ÀÌÂ÷¿ø¹è¿­°ú¿¬»ê_17140 {
 		for (int i = 0; i < C; i++) {
 			list.clear();
 			for (int j = 0; j < R; j++) {
-				if (arr[j][i] != 0) { // list¿¡ ÀÔ·Â
-					if (!checkListDuplicate(arr[j][i])) {// list¿¡ arr[j][i]°¡ ¾øÀ¸¸é list¿¡ ³Ö¾îÁÜ
+				if (arr[j][i] != 0) { // listì— ì…ë ¥
+					if (!checkListDuplicate(arr[j][i])) {// listì— arr[j][i]ê°€ ì—†ìœ¼ë©´ listì— ë„£ì–´ì¤Œ
 						list.add(new Value(arr[j][i], 1));
-					} else { // list¿¡ ÀÌ¹Ì arr[i][j]°¡ ÀÖÀ¸¸é µîÀå È¸¼ö Áõ°¡
+					} else { // listì— ì´ë¯¸ arr[i][j]ê°€ ìˆìœ¼ë©´ ë“±ì¥ íšŒìˆ˜ ì¦ê°€
 						for (int t = 0; t < list.size(); t++) {
 							if (list.get(t).value == arr[j][i]) {
 								list.get(t).times++;
@@ -161,7 +159,7 @@ public class ÀÌÂ÷¿ø¹è¿­°ú¿¬»ê_17140 {
 					}
 				}
 			}
-			// ¼ö ¿À¸§Â÷¼øÀ¸·Î ¸ÕÀú Á¤·ÄÇÏ°í µîÀåÈ¸¼ö ¿À¸§Â÷¼øÀ¸·Î Á¤·Ä -> µîÀåÈ¸¼ö ¿À¸§Â÷¼øÀÌ 1¼øÀ§
+			// ìˆ˜ ì˜¤ë¦„ì°¨ìˆœìœ¼ë¡œ ë¨¼ì € ì •ë ¬í•˜ê³  ë“±ì¥íšŒìˆ˜ ì˜¤ë¦„ì°¨ìˆœìœ¼ë¡œ ì •ë ¬ -> ë“±ì¥íšŒìˆ˜ ì˜¤ë¦„ì°¨ìˆœì´ 1ìˆœìœ„
 			list.sort(new Comparator<Value>() {
 
 				@Override
@@ -179,7 +177,7 @@ public class ÀÌÂ÷¿ø¹è¿­°ú¿¬»ê_17140 {
 				}
 			});
 
-			// ¹è¿­ °»½Å
+			// ë°°ì—´ ê°±ì‹ 
 			int idx = 0;
 			int size = list.size();
 			if(size > 100) size = 100;
