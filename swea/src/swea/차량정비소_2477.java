@@ -1,214 +1,186 @@
-package swea;
-
 import java.util.*;
 import java.io.*;
 
-public class Â÷·®Á¤ºñ¼Ò_2477 {
+public class ì°¨ëŸ‰ì •ë¹„ì†Œ_2477_2 {
+	static Customer[] customer;
+	static Desk[] receptionDesk, repairDesk;
 	static int N, M, K, A, B, ans;
-	static ArrayList<Customer> customer;
-	static ArrayList<Desk> reception, repair;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 
 		int t = Integer.parseInt(br.readLine());
-		for (int tc = 1; tc <= 10; tc++) {
+		for (int tc = 1; tc <= t; tc++) {
 			st = new StringTokenizer(br.readLine());
-
 			N = Integer.parseInt(st.nextToken());
 			M = Integer.parseInt(st.nextToken());
 			K = Integer.parseInt(st.nextToken());
 			A = Integer.parseInt(st.nextToken());
 			B = Integer.parseInt(st.nextToken());
 
-			System.out.println();
-			System.out.println("N : " + N + " M : " + M + " K: " + K + " A : " + A + " B : " + B);
+			receptionDesk = new Desk[N];
+			repairDesk = new Desk[M];
+			customer = new Customer[K];
 			ans = 0;
-
-			customer = new ArrayList<>();
-			reception = new ArrayList<>();
-			repair = new ArrayList<>();
-
 			st = new StringTokenizer(br.readLine());
 			for (int i = 0; i < N; i++) {
 				int time = Integer.parseInt(st.nextToken());
-				reception.add(new Desk(time, 0));
+				receptionDesk[i] = new Desk(false, time);
 			}
 
 			st = new StringTokenizer(br.readLine());
 			for (int i = 0; i < M; i++) {
 				int time = Integer.parseInt(st.nextToken());
-				repair.add(new Desk(time, 0));
+				repairDesk[i] = new Desk(false, time);
 			}
 
 			st = new StringTokenizer(br.readLine());
 			for (int i = 0; i < K; i++) {
-				int tk = Integer.parseInt(st.nextToken());
-				customer.add(new Customer(tk, -1, 0, -1, 0, 0));
+				int time = Integer.parseInt(st.nextToken());
+				customer[i] = new Customer(i, time, -1, -1, -1, -1, -1);
 			}
 
-			search(0, 0, 0,0);
-			System.out.println();
+			findResult();
 			System.out.printf("#%d %d\n", tc, ans);
 		}
-
 	}
 
-	static void search(int time, int completecus, int recep1, int repair1) {
-		System.out.println("time : " + time);
+	// ë’¤ì—ì„œ ë¶€í„° ì‘ì—…ì´ ì™„ë£Œëœ ì‚¬ëŒì€ ë¹¼ì¤˜ì•¼ ë™ì‹œê°„ëŒ€ì— ë“¤ì–´ê°ˆ ìˆ˜ ìˆìŒ
+	static void findResult() {
+		int time = 0;
+		int emptyRepairDesk = M;
+		int emptyReceptionDesk = N;
+		int receptDone = 0;
+		int repairDone = 0;
+		while (true) {
+			
+			if (repairDone == K) {
+				break;
+			}
 
-		if (completecus == K) {
-			int result = 0;
-
+			// ì ‘ìˆ˜ ì™„ë£Œëœ ì¸ì› ë¹¼ì¤Œ
 			for (int i = 0; i < K; i++) {
-				
-				if (customer.get(i).recepnum + 1 == A && customer.get(i).repairnum + 1 == B) {
-					System.out.println("i : " + i + " recepnum : " + customer.get(i).recepnum + " repairnum : "
-							+ customer.get(i).repairnum);
-					result += i + 1;
+				if (customer[i].startTimeReception != -1
+						&& time - customer[i].startTimeReception == receptionDesk[customer[i].receptionDesk].time) {
+					customer[i].endTimeReception = time;
+					receptionDesk[customer[i].receptionDesk].working = false;
+					emptyReceptionDesk++;
+					receptDone++;
 				}
 			}
-			if (result != 0)
-				ans = result;
-			else
-				ans = -1;
-			return;
-		}
-		int curtime = time;
-		int ctemp = 0;
-		int emptyrecep = recep1;
-		int emptyrepair = repair1;
-
-		for (int z = 0; z < N; z++) {
-			if (reception.get(z).status == 0)
-				emptyrecep++;
-		}
-		for (int z = 0; z < M; z++) {
-			if (repair.get(z).status == 0)
-				emptyrepair++;
-		}
-
-		// 0:´ë±â, 1:Á¢¼ö, 2:Á¢¼ö ¿Ï·á, 3:Á¤ºñ, 4:Á¤ºñ ¿Ï·á
-		for (int i = 0; i < K; i++) {
-			// Á¤ºñ ¿Ï·á µÆÀ» ¶§
-			if (customer.get(i).status == 3) {
-				int j = customer.get(i).repairnum;
-				if (repair.get(j).time == curtime - customer.get(i).repairtime) {
-					customer.get(i).status = 4;
-					repair.get(j).status = 0;
-					emptyrepair++;
-					System.out.println("Á¤ºñ Á¾·á || cusnum : " + i + " repairnum : " + customer.get(i).repairnum
-							+ " repairtime : " + customer.get(i).repairtime + " cus status : " + customer.get(i).status
-							+ " repair status : " + repair.get(j).status);
-
-				}
-			}
-
-			// Á¢¼ö ¿Ï·á µÆÀ» ¶§
-			if (customer.get(i).status == 1) {
-				int j = customer.get(i).recepnum;
-				if (reception.get(j).time == curtime - customer.get(i).receptime) {
-					customer.get(i).status = 2;
-					reception.get(j).status = 0;
-					emptyrecep++;
-					System.out.println("Á¢¼ö ¿Ï·á || cusnum : " + i + " recepnum : " + customer.get(i).recepnum
-							+ " receptime : " + customer.get(i).receptime + " cus status : " + customer.get(i).status
-							+ " recep status : " + reception.get(j).status);
-				}
-
-			}
-		}
-
-		// µ¿½Ã¿¡ ¿©·¯¸íÀÌ Á¾·á, µé¾î°¥ ¼ö ÀÖ±â ¶§¹®¿¡ for¹®À» µû·Î µ¹·Á ÁÜ
-		// 0:´ë±â, 1:Á¢¼ö, 2:Á¢¼ö ¿Ï·á, 3:Á¤ºñ, 4:Á¤ºñ ¿Ï·á
-		for (int i = 0; i < K; i++) {
-			// Á¤ºñ Ã¢±¸ ºñ¾úÀ» ¶§
-			if (customer.get(i).status == 2 && emptyrepair != 0) {
-				ArrayList<Integer> recnum = new ArrayList<>();
-				for (int z = 0; z < K; z++) {
-					if (customer.get(z).status == 2) {
-						recnum.add(customer.get(z).recepnum);
+	
+			
+			Arrays.sort(customer, new Comparator<Customer>() {
+				// ë„ì°© ì‹œê°„ì´ ê°™ìœ¼ë©´ ê³ ê° ë²ˆí˜¸ê°€ ëŠ¦ì€ ìˆœìœ¼ë¡œ ì •ë ¬
+				@Override
+				public int compare(Customer o1, Customer o2) {
+					if (o1.arrivalTime == o2.arrivalTime) {
+						return o1.num - o2.num;
+					} else {
+						return o1.arrivalTime - o2.arrivalTime;
 					}
 				}
-				Collections.sort(recnum);
-				
-				System.out.println("recnum size : " + recnum.size());
-				for (int z = 0; z < recnum.size(); z++) {
-					for (int j = 0; j < M; j++) {
-						if (repair.get(j).status == 0) {
-							for (int q = 0; q < K; q++) {
-								if (recnum.get(z) == customer.get(q).recepnum && customer.get(q).status == 2) {
-									customer.get(q).status = 3;
-									customer.get(q).repairnum = j;
-									customer.get(q).repairtime = curtime;
-									repair.get(j).status = 1;
-									emptyrepair--;
-									System.out.println("Á¤ºñ ½ÃÀÛ || cusnum : " + q + " repairnum : "
-											+ customer.get(q).repairnum + " repairtime : " + customer.get(q).repairtime
-											+ " cus status : " + customer.get(q).status + " repair status : "
-											+ repair.get(j).status);
-									
-								}
+			});
+
+			// ì ‘ìˆ˜ì°½êµ¬ ë¹„ì–´ìˆê³  ëª¨ë“  ê³ ê°ì˜ ì ‘ìˆ˜ê°€ ì¢…ë£Œëœ ê²Œ ì•„ë‹ˆë©´ ì ‘ìˆ˜ ì‹œì‘
+			if (emptyReceptionDesk > 0 && receptDone < K) {
+
+				for (int i = 0; i < N; i++) {
+					if (!receptionDesk[i].working) {
+						for (int j = 0; j < K; j++) {
+							if (customer[j].startTimeReception == -1 && customer[j].arrivalTime <= time) {
+								
+								customer[j].startTimeReception = time;
+								customer[j].receptionDesk = i;
+								receptionDesk[i].working = true;
+								emptyReceptionDesk--;
+								break;
 							}
 						}
 					}
 				}
-
-
 			}
 
-			// Á¢¼ö Ã¢±¸ ºñ¾úÀ» ¶§
+		
 
-			if (customer.get(i).status == 0 && curtime >= customer.get(i).tk) {
-				for (int j = 0; j < N; j++) {
-					if (reception.get(j).status == 0) {
-						customer.get(i).status = 1;
-						customer.get(i).recepnum = j;
-						customer.get(i).receptime = curtime;
-						reception.get(j).status = 1;
-						emptyrecep--;
-						System.out.println("Á¢¼ö ½ÃÀÛ || cusnum : " + i + " recepnum : " + customer.get(i).recepnum
-								+ " receptime : " + customer.get(i).receptime + " cus status : "
-								+ customer.get(i).status + " recep status : " + reception.get(j).status);
-						break;
+			// ì •ë¹„ ì¢…ë£Œëœ ì¸ì› ë¹¼ì¤Œ
+			for (int i = 0; i < K; i++) {
+				if (customer[i].startTimeRepair != -1
+						&& time - customer[i].startTimeRepair == repairDesk[customer[i].repairDesk].time) {
+					repairDesk[customer[i].repairDesk].working = false;
+					emptyRepairDesk++;
+					repairDone++;
+				}
+			}
+
+			Arrays.sort(customer, new Comparator<Customer>() {
+
+				@Override
+				public int compare(Customer o1, Customer o2) {
+					if(o1.endTimeReception == o2.endTimeReception) {
+						return o1.receptionDesk - o2.receptionDesk;
+					} else {
+						return o1.endTimeReception - o2.endTimeReception;
+					}
+				}
+			});
+
+			// ì •ë¹„ì°½êµ¬ ë¹„ì–´ìˆê³  ëŒ€ê¸° ì¸ì› ìˆìœ¼ë©´ ì •ë¹„ ì‹œì‘
+			if (emptyRepairDesk > 0) {
+				// ì •ë¹„ ì°½êµ¬ë¡œ ë³´ë‚´ê¸° ì „ ì´ìš©í–ˆë˜ ì ‘ìˆ˜ì°½êµ¬ ë²ˆí˜¸ê°€ ì‘ì€ ê³ ê°ì´ ìš°ì„ ì´ë¯€ë¡œ ì •ë ¬í•´ì¤Œ
+
+				for (int i = 0; i < M; i++) {
+					if (!repairDesk[i].working) {
+						for (int j = 0; j < K; j++) {
+							if (customer[j].endTimeReception != -1 && customer[j].startTimeRepair == -1) {
+								customer[j].startTimeRepair = time;
+								customer[j].repairDesk = i;
+								repairDesk[i].working = true;
+								emptyRepairDesk--;
+								break;
+							}
+						}
 					}
 				}
 			}
-		}
 
-//		System.out.printf("complete customer :");
+			time++;
+		}
 
 		for (int i = 0; i < K; i++) {
-			if (customer.get(i).status == 4) {
-//				System.out.printf(" "+i);
-				ctemp++;
+			if (customer[i].receptionDesk == A - 1 && customer[i].repairDesk == B - 1) {
+				ans += (customer[i].num + 1);
 			}
 		}
-//		System.out.println(" ctemp : "+ctemp);
-		search(curtime + 1, ctemp, emptyrecep, emptyrepair);
+		if (ans == 0) {
+			ans = -1;
+		}
+
 	}
 
 	public static class Customer {
-		int tk, recepnum, receptime, repairnum, repairtime, status;
+		int num, arrivalTime, startTimeReception, receptionDesk, endTimeReception, startTimeRepair, repairDesk;
 
-		public Customer(int tk, int recepnum, int receptime, int repairnum, int repairtime, int status) {
-			this.tk = tk;
-			this.recepnum = recepnum; // Á¢¼ö Ã¢±¸ ¹øÈ£
-			this.receptime = receptime; // Á¢¼ö ½ÃÀÛ ½Ã°£
-			this.repairnum = repairnum; // Á¤ºñ Ã¢±¸ ¹øÈ£
-			this.repairtime = repairtime; // Á¤ºñ ½ÃÀÛ ½Ã°£
-			this.status = status; // 0:´ë±â, 1:Á¢¼ö, 2:Á¢¼ö ¿Ï·á, 3:Á¤ºñ, 4:Á¤ºñ ¿Ï·á
+		public Customer(int num, int arrivalTime, int startTimeReception, int receptionDesk, int endTimeReception,
+				int startTimeRepair, int repairDesk) {
+			this.num = num;
+			this.arrivalTime = arrivalTime;
+			this.startTimeReception = startTimeReception;
+			this.receptionDesk = receptionDesk;
+			this.endTimeReception = endTimeReception;
+			this.startTimeRepair = startTimeRepair;
+			this.repairDesk = repairDesk;
 		}
 	}
 
 	public static class Desk {
-		int time, status;
+		boolean working;
+		int time;
 
-		public Desk(int time, int status) {
+		public Desk(boolean working, int time) {
+			this.working = working;
 			this.time = time;
-			this.status = status; // 0:ºñ¾îÀÖÀ½, 1:ÀÛ¾÷ Áß
 		}
 	}
-
 }
